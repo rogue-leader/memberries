@@ -3,16 +3,25 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Page One</ion-title>
+    <ion-title>{{listTitle}}</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  <h3>Ionic Menu Starter</h3>
+  <ion-list>
 
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will show you the way.
-  </p>
+    <ion-item-sliding *ngFor="let task of tasks" #item>
+      <ion-item>
+        {{task.description}}
+      </ion-item>
+      <ion-item-options side="right">
+        <button ion-button (click)="markAsDone(task)">Ja</button>
+      </ion-item-options>
+    </ion-item-sliding>
 
-  <button ion-button secondary menuToggle>Toggle Menu</button>
+    <ion-item>
+      <ion-input placeholder="Anything else?" clearInput [(ngModel)]="newTask.description" (blur)="createTask()"></ion-input>
+    </ion-item>
+
+  </ion-list>
 </ion-content>

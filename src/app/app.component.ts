@@ -12,24 +12,15 @@ import { Page2 } from '../pages/page2/page2';
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
-  rootPage: any = Page1;
+  rootPage: any = Page2;
 
-  pages: Array<{title: string, component: any}>;
+  pages: Array<{title: string}>;
 
   constructor(public platform: Platform) {
     this.initializeApp();
-
-    // used for an example of ngFor and navigation
-    if(localStorage.getItem('Listenverzeichnis') == null) {
-      let initialeListe = [
-        { title: 'Einkaufen', component: Page1 },
-        { title: 'Urlaub', component: Page2 }
-      ];
-      this.saveList(initialeListe);
-    }
-    
+    this.initializeStorage();
     this.pages = this.readList();
-
+    // this.openPage(this.pages[0]);
   }
 
   initializeApp() {
@@ -41,33 +32,50 @@ export class MyApp {
     });
   }
 
-  openPage(page) {
-    // Reset the content nav to have just this page
-    // we wouldn't want the back button to show in this scenario
-    this.nav.setRoot(page.component);
+  initializeStorage() {
+    // used for an example of ngFor and navigation
+    if(localStorage.getItem('Listenverzeichnis') == null) {
+      let initialeListe = [];
+      this.saveList(initialeListe);
+    }
   }
 
-  readList() {
-    //1. Bestehende Liste lesen
-    //2. Gelesene Liste als Array haben
+  openPage(page) {
+    this.nav.setRoot(Page1, page);
+  }
 
+  readList(): Array<{title: string}> {
     let datenListe = localStorage.getItem('Listenverzeichnis');
     let liste = JSON.parse(datenListe);
     return liste;
   }
 
   addList() {
-    //3. Dem Array ein neues Listenobjekt hinzufügen  
-    //4. Neue Liste abspeichern
     let listen = this.readList();
-    let pushList = {title: 'Neue Liste', component: Page2};
+    let pushList = {id:(Date.now()), title: 'Neue Liste'};
     listen.push(pushList);
     this.saveList(listen);
     this.pages = this.readList();
   }
 
   saveList(s) {
-      let daten = JSON.stringify(s);
-      localStorage.setItem('Listenverzeichnis', daten);
+    let daten = JSON.stringify(s);
+    localStorage.setItem('Listenverzeichnis', daten);
+  }
+
+  deleteList(outdatedList) {
+    let lists = this.readList();
+    let neueListe = [];
+
+    for(let list of lists) { //[a,b,c,d,f]
+      let id:any = list['id'];
+
+      if(id != outdatedList.id) {
+        neueListe.push(list);
+      }
+    }
+
+    this.saveList(neueListe);
+    this.pages = neueListe;
   }
 }
