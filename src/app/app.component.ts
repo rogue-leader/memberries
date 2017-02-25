@@ -20,10 +20,15 @@ export class MyApp {
     this.initializeApp();
 
     // used for an example of ngFor and navigation
-    this.pages = [
-      { title: 'Page One', component: Page1 },
-      { title: 'Page Two', component: Page2 }
-    ];
+    if(localStorage.getItem('Listenverzeichnis') == null) {
+      let initialeListe = [
+        { title: 'Einkaufen', component: Page1 },
+        { title: 'Urlaub', component: Page2 }
+      ];
+      this.saveList(initialeListe);
+    }
+    
+    this.pages = this.readList();
 
   }
 
@@ -40,5 +45,29 @@ export class MyApp {
     // Reset the content nav to have just this page
     // we wouldn't want the back button to show in this scenario
     this.nav.setRoot(page.component);
+  }
+
+  readList() {
+    //1. Bestehende Liste lesen
+    //2. Gelesene Liste als Array haben
+
+    let datenListe = localStorage.getItem('Listenverzeichnis');
+    let liste = JSON.parse(datenListe);
+    return liste;
+  }
+
+  addList() {
+    //3. Dem Array ein neues Listenobjekt hinzufügen  
+    //4. Neue Liste abspeichern
+    let listen = this.readList();
+    let pushList = {title: 'Neue Liste', component: Page2};
+    listen.push(pushList);
+    this.saveList(listen);
+    this.pages = this.readList();
+  }
+
+  saveList(s) {
+      let daten = JSON.stringify(s);
+      localStorage.setItem('Listenverzeichnis', daten);
   }
 }
