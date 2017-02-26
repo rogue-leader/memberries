@@ -38,4 +38,20 @@ export class toDoListComponent {
       isDone: false
     };
   }
+
+  onDoneButtonClick(task) {
+    this.markAsDone(task);
+    this.updateItemList();
+    //Später Änderung in localStorage speichern
+  }
+
+  updateItemList() {
+    let undoneTasks = [];
+    for(let task of this.tasks){
+      if(task.isDone != true){
+         undoneTasks.push(task);
+      }
+    }
+    this.tasks = undoneTasks;
+  }
 }
