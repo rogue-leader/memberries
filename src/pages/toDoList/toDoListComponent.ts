@@ -2,24 +2,20 @@ import { Component } from '@angular/core';
 
 import { NavController } from 'ionic-angular';
 import { NavParams } from 'ionic-angular';
+import { TodoListService } from '../../services/todoListService';
 
 @Component({
   selector: 'page-page3',
   templateUrl: 'toDoListView.html'
 })
 export class toDoListComponent {
-  public tasks: Array<any>;
+  // public tasks: Array<any>;
   public newTask: any;
-  public listTitle:string;
+  public todoList: any;
 
-  constructor(public navCtrl: NavController, private navParams: NavParams) {
-    this.listTitle = navParams.get('title');
+  constructor(public navCtrl: NavController, private navParams: NavParams, private todoListService: TodoListService) {
+    this.todoList = navParams.get('todoList');
     this.newTask = this.createEmptyTask();
-    this.tasks = [
-      {id: 123, description: 'Aepfel', isDone: false},
-      {id: 456, description: 'Orangen', isDone: false},
-      {id: 789, description: 'Bananen', isDone: false}
-    ];
   }
 
   markAsDone(task) {
@@ -27,7 +23,8 @@ export class toDoListComponent {
   }
 
   createTask() {
-    this.tasks.push(this.newTask);
+    this.todoList.tasks.push(this.newTask);
+    this.todoListService.saveToDoList(this.todoList);
     this.newTask = this.createEmptyTask();
   }
 
@@ -42,16 +39,17 @@ export class toDoListComponent {
   onDoneButtonClick(task) {
     this.markAsDone(task);
     this.updateItemList();
+    this.todoListService.saveToDoList(this.todoList);
     //Später Änderung in localStorage speichern
   }
 
   updateItemList() {
     let undoneTasks = [];
-    for(let task of this.tasks){
+    for(let task of this.todoList.tasks){
       if(task.isDone != true){
          undoneTasks.push(task);
       }
     }
-    this.tasks = undoneTasks;
+    this.todoList.tasks = undoneTasks;
   }
 }

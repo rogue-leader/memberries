@@ -3,14 +3,14 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>{{listTitle}}</ion-title>
+    <ion-title>{{todoList.title}}</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
   <ion-list>
 
-    <ion-item-sliding *ngFor="let task of tasks" #item>
+    <ion-item-sliding *ngFor="let task of todoList.tasks" #item>
       <ion-item>
         {{task.description}}
       </ion-item>

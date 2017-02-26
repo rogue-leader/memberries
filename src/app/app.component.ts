@@ -4,7 +4,7 @@ import { StatusBar, Splashscreen } from 'ionic-native';
 
 import { toDoListComponent } from '../pages/toDoList/toDoListComponent';
 import { welcomeComponent } from '../pages/welcome/welcomeComponent';
-
+import { TodoListService } from '../services/todoListService';
 
 @Component({
   templateUrl: 'app.html'
@@ -16,10 +16,10 @@ export class MyApp {
 
   toDoListen: Array<{title: string}>;
 
-  constructor(public platform: Platform) {
+  constructor(public platform: Platform, public todoListService: TodoListService) {
     this.initializeApp();
     this.initializeStorage();
-    this.toDoListen = this.readToDoLists();
+    this.toDoListen = this.todoListService.readToDoLists();
     // this.openPage(this.toDoListen[0]);
   }
 
@@ -34,48 +34,15 @@ export class MyApp {
 
   initializeStorage() {
     // used for an example of ngFor and navigation
-    if(localStorage.getItem('Listenverzeichnis') == null) {
-      let initialeListe = [];
-      this.saveToDoList(initialeListe);
-    }
+    this.todoListService.warmupStorage();
   }
 
-  openPage(toDoList) {
-    this.nav.setRoot(toDoListComponent, toDoList);
+  openPage(listToOpen) {
+    this.nav.setRoot(toDoListComponent, {todoList: listToOpen});
   }
 
-  readToDoLists(): Array<{title: string}> {
-    let datenListe = localStorage.getItem('Listenverzeichnis');
-    let liste = JSON.parse(datenListe);
-    return liste;
-  }
-
-  addToDoList() {
-    let listen = this.readToDoLists();
-    let pushList = {id:(Date.now()), title: 'Neue Liste'};
-    listen.push(pushList);
-    this.saveToDoList(listen);
-    this.toDoListen = this.readToDoLists();
-  }
-
-  saveToDoList(s) {
-    let daten = JSON.stringify(s);
-    localStorage.setItem('Listenverzeichnis', daten);
-  }
-
-  deleteToDoList(outdatedList) {
-    let lists = this.readToDoLists();
-    let neueListe = [];
-
-    for(let list of lists) { //[a,b,c,d,f]
-      let id:any = list['id'];
-
-      if(id != outdatedList.id) {
-        neueListe.push(list);
-      }
-    }
-
-    this.saveToDoList(neueListe);
-    this.toDoListen = neueListe;
+  onAddTodoListClickHandler() {
+    this.todoListService.addToDoList();
+    this.toDoListen = this.todoListService.readToDoLists();
   }
 }
