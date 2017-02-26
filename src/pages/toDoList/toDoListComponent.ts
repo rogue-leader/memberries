@@ -4,10 +4,10 @@ import { NavController } from 'ionic-angular';
 import { NavParams } from 'ionic-angular';
 
 @Component({
-  selector: 'page-page1',
-  templateUrl: 'page1.html'
+  selector: 'page-page3',
+  templateUrl: 'toDoListView.html'
 })
-export class Page1 {
+export class toDoListComponent {
   public tasks: Array<any>;
   public newTask: any;
   public listTitle:string;
