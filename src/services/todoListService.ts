@@ -12,6 +12,7 @@ export class TodoListService {
 
   readToDoLists(): Array<{id: number, title: string, tasks: any}> {
     let datenListe = localStorage.getItem('Listenverzeichnis');
+    console.log(datenListe);
     let liste = JSON.parse(datenListe);
     return liste;
   }
@@ -26,6 +27,10 @@ export class TodoListService {
   saveToDoList(todoList) {
     let freshLists = [];
     let allLists = this.readToDoLists();
+
+    if(allLists == null) {
+      allLists = [];
+    }
     
     for(let list of allLists) {
       if(list.id == todoList.id) {
