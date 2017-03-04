@@ -14,14 +14,24 @@ export class TodoListService {
     let datenListe = localStorage.getItem('Listenverzeichnis');
     console.log(datenListe);
     let liste = JSON.parse(datenListe);
+
+    if(liste == null) {
+      liste = [];
+      localStorage.setItem('Listenverzeichnis', JSON.stringify('[]'))
+    }
+
     return liste;
   }
 
   addToDoList() {
+    debugger;
     let listen = this.readToDoLists();
     let pushList = this.generateEmptyTodoList();
+    let allLists = this.readToDoLists();
+
     listen.push(pushList);
-    this.saveToDoList(listen);
+    let daten = JSON.stringify(listen);
+    localStorage.setItem('Listenverzeichnis', daten);
   }
 
   saveToDoList(todoList) {
@@ -43,7 +53,7 @@ export class TodoListService {
     let daten = JSON.stringify(freshLists);
     localStorage.setItem('Listenverzeichnis', daten);
   }
-  
+
   generateEmptyTodoList() {
     return {
       id:(Date.now()),
