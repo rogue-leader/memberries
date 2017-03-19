@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { NavParams } from 'ionic-angular';
 import { TodoListService } from '../../services/todoListService';
+import { ToastController } from 'ionic-angular';
 
 @Component({
   selector: 'page-page3',
@@ -13,7 +14,7 @@ export class toDoListComponent {
   public newTask: any;
   public todoList: any;
 
-  constructor(public navCtrl: NavController, private navParams: NavParams, private todoListService: TodoListService) {
+  constructor(public navCtrl: NavController, private navParams: NavParams, private todoListService: TodoListService, private toastCtrl: ToastController) {
     this.todoList = navParams.get('todoList');
     this.newTask = this.createEmptyTask();
   }
@@ -39,6 +40,7 @@ export class toDoListComponent {
   onDoneButtonClick(task) {
     this.markAsDone(task);
     this.updateItemList();
+    this.showToast();
     this.todoListService.saveToDoList(this.todoList);
     //Später Änderung in localStorage speichern
   }
@@ -52,4 +54,13 @@ export class toDoListComponent {
     }
     this.todoList.tasks = undoneTasks;
   }
+
+showToast() {
+  let toast = this.toastCtrl.create({
+    message: 'Task is done.',
+    duration: 2500
+  });
+  toast.present();
+}
+
 }
